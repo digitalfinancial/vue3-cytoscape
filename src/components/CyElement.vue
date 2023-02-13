@@ -10,6 +10,8 @@ import {
   watch,
   onBeforeUnmount,
   useAttrs,
+  onMounted,
+  inject,
 } from 'vue'
 import {
   Selector,
@@ -70,11 +72,10 @@ function add() {
       )
     })
   }
-
   // strip observers from the original definition
   let def = JSON.parse(JSON.stringify(props.definition))
   // add the element to cytoscape
-  return instance.value.add(def)[0]
+  return instance.value?.add(def)[0]
 }
 
 function configure(cy: Core) {
@@ -85,6 +86,12 @@ function configure(cy: Core) {
     selector.value = `#${id.value}`
   }
 }
+
+const cy = inject('cy')
+
+onMounted(() => {
+  cy?.then(configure)
+})
 
 onBeforeUnmount(() => {
   instance.value?.remove(selector.value)

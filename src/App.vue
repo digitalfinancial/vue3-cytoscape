@@ -1,20 +1,21 @@
 <template>
   <div id="app">
+    Example Graph
     <Cytoscape
       ref="cy"
-      :config="config"
+      :config="exampleConfig"
       :preConfig="preConfig"
       :afterCreated="afterCreated"
-      v-on:mousedown="addNode"
-      v-on:cxttap="reactiveUpdate"
+      @mousedown="addNode"
+      @cxttap="reactiveUpdate"
     >
       <cy-element
-        v-for="def in elements"
+        v-for="def in eles"
         :key="`${def.data.id}`"
         :definition="def"
-        v-on:click="deleteNode($event, def.data.id)"
-        v-on:cxttap="updateNode"
         :sync="true"
+        @click="deleteNode($event, def.data.id)"
+        @cxttap="updateNode"
       />
     </Cytoscape>
   </div>
@@ -37,7 +38,7 @@ import exampleConfig from '@/example-config.ts'
 import eles from '@/example-elements.ts'
 
 const cy = ref<Core | undefined>(undefined)
-const elements = ref(eles)
+
 const config = computed(() => {
   const noElementsConfig = { ...exampleConfig }
   delete noElementsConfig.elements
@@ -45,6 +46,7 @@ const config = computed(() => {
 })
 
 function addNode(event: EventObject) {
+  console.log('node added')
   // Example of adding node
   if (event.target === cy.value.instance) {
     const id: string = uuid()
@@ -87,10 +89,11 @@ function reactiveUpdate(event: any) {
 }
 
 function preConfig(cytoscape: any) {
-  console.log(`calling preConfig`, cytoscape)
+  console.log(`calling preConfig`)
 }
 
 function afterCreated(created: Core) {
+  console.log(`calling afterCreated`)
   cy.value = created
 }
 </script>

@@ -13,12 +13,14 @@ import {
   onMounted,
   useSlots,
   useAttrs,
+  defineEmits,
 } from 'vue'
 import cytoscape, {
   CytoscapeOptions,
   Core,
   EventNames,
   EventHandler,
+  EventObject,
 } from 'cytoscape'
 
 const props = withDefaults(
@@ -32,6 +34,10 @@ const props = withDefaults(
     afterCreated: (x: any) => {},
   }
 )
+
+const emit = defineEmits<{
+  (e: 'mousedown', event: EventObject): void
+}>()
 
 const attrs = useAttrs()
 const slots = useSlots()
@@ -62,8 +68,7 @@ onMounted(() => {
     ([_, val]) => typeof val === 'function'
   )
   const register = (eventType: EventNames, f: EventHandler) =>
-    instance.on(eventType, f)
-
+    instance.value?.on(eventType, f)
   for (const [eventType, callback] of events) {
     if (Array.isArray(callback))
       callback.map((f) => register(eventType, f as EventHandler))
