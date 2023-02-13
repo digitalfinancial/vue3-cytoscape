@@ -7,8 +7,8 @@ const config: CytoscapeOptions = {
       selector: 'node',
       style: {
         'background-color': '#666',
-        label: 'data(label)'
-      }
+        label: 'data(label)',
+      },
     },
     {
       selector: 'edge',
@@ -16,17 +16,17 @@ const config: CytoscapeOptions = {
         width: 7,
         'line-color': 'blue',
         'target-arrow-color': '#aaaaaa',
-        'target-arrow-shape': 'triangle'
-      }
-    }
+        'target-arrow-shape': 'triangle',
+      },
+    },
   ],
   layout: {
     animate: true, // whether to animate changes to the layout
     animationDuration: 500, // duration of animation in ms, if enabled
     animationEasing: undefined, // easing of animation, if enabled
     name: 'grid',
-    rows: 1
-  }
+    rows: 1,
+  },
 }
 
 export default config

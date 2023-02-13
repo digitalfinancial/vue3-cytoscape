@@ -1,12 +1,12 @@
-import CyElement from './components/CyElement'
-import VueCytoscape from './components/Cytoscape'
-import { VueConstructor } from 'vue'
+import CyElement from './components/CyElement.vue'
+import VueCytoscape from './components/Cytoscape.vue'
+import { App } from 'vue'
 
 export default {
-  install(Vue: VueConstructor) {
-    Vue.component('cytoscape', VueCytoscape)
-    Vue.component('cy-element', CyElement)
-  }
+  install(app: App) {
+    app.component('cytoscape', VueCytoscape)
+    app.component('cy-element', CyElement)
+  },
 }
 
 export { VueCytoscape, CyElement }

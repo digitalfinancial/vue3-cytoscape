@@ -4,44 +4,44 @@ const eles: ElementDefinition[] = [
   {
     data: {
       id: 'a',
-      label: 'a'
+      label: 'a',
     },
     position: {
       x: 589,
-      y: 182
+      y: 182,
     },
-    group: 'nodes'
+    group: 'nodes',
   },
   {
     data: {
       id: 'b',
-      label: 'b'
+      label: 'b',
     },
     position: {
       x: 689,
-      y: 282
+      y: 282,
     },
-    group: 'nodes'
+    group: 'nodes',
   },
   {
     data: {
       id: 'c',
-      label: 'c'
+      label: 'c',
     },
     position: {
       x: 489,
-      y: 282
+      y: 282,
     },
-    group: 'nodes'
+    group: 'nodes',
   },
   {
     data: {
       id: 'ab',
       source: 'a',
-      target: 'b'
+      target: 'b',
     },
-    group: 'edges'
-  }
+    group: 'edges',
+  },
 ]
 
 export default eles
