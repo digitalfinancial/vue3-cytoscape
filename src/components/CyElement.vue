@@ -12,15 +12,10 @@ import {
   useAttrs,
   onMounted,
   inject,
+  defineEmits,
 } from 'vue'
-import {
-  Selector,
-  Core,
-  ElementDefinition,
-  EventObject,
-  EventNames,
-  EventHandler,
-} from 'cytoscape'
+import { Selector, Core, ElementDefinition, EventObject } from 'cytoscape'
+import { CyElementEventsNames } from '@/types'
 
 const props = withDefaults(
   defineProps<{
@@ -32,23 +27,21 @@ const props = withDefaults(
   }
 )
 
+const emit = defineEmits<{
+  (e: CyElementEventsNames, event: EventObject): void
+}>()
+
 const attrs = useAttrs()
 const id = ref(props.definition.data.id)
-const selector = ref<Selector>('')
+const selector = ref<Selector>(`#${id.value}`)
 const instance = ref<Core | undefined>(undefined)
 
 function add() {
   // register all the component events as cytoscape ones
-  const events = Object.entries(attrs).filter(
-    ([_, val]) => typeof val === 'function'
-  )
-  const register = (eventType: EventNames, f: EventHandler) =>
-    instance.on(eventType, selector.value, f)
-
-  for (const [eventType, callback] of events) {
-    if (Array.isArray(callback))
-      callback.map((f) => register(eventType, f as EventHandler))
-    else register(eventType, callback as EventHandler)
+  for (const eventType of Object.values(CyElementEventsNames)) {
+    instance.value?.on(eventType, selector.value, (event: EventObject) => {
+      emit(eventType, event)
+    })
   }
 
   // if sync is on, track position
@@ -72,19 +65,21 @@ function add() {
       )
     })
   }
+
   // strip observers from the original definition
   let def = JSON.parse(JSON.stringify(props.definition))
+
   // add the element to cytoscape
   return instance.value?.add(def)[0]
 }
 
 function configure(cy: Core) {
   instance.value = cy
+
   const ele = add()
-  if (!id.value) {
-    id.value = ele.data().id
-    selector.value = `#${id.value}`
-  }
+
+  id.value = ele.data().id
+  selector.value = `#${id.value}`
 }
 
 const cy = inject('cy')
@@ -108,8 +103,8 @@ watch(
 watch(
   () => props.definition.position,
   (position: any = null) => {
-    const ele = instance.value.getElementById(id.value)
-    ele.position(JSON.parse(JSON.stringify(position)))
+    const ele = instance.value?.getElementById(id.value)
+    ele?.position(JSON.parse(JSON.stringify(position)))
   }
 )
 </script>

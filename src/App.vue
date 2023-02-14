@@ -1,6 +1,5 @@
 <template>
   <div id="app">
-    Example Graph
     <Cytoscape
       ref="cy"
       :config="exampleConfig"
@@ -10,7 +9,7 @@
       @cxttap="reactiveUpdate"
     >
       <cy-element
-        v-for="def in eles"
+        v-for="def in elements"
         :key="`${def.data.id}`"
         :definition="def"
         :sync="true"
@@ -29,15 +28,16 @@
 </style>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, toRaw } from 'vue'
 import uuid from 'uuid/v4'
-import { Core, EventObject } from 'cytoscape'
+import { Core, ElementDefinition, EventObject } from 'cytoscape'
 import Cytoscape from '@/components/Cytoscape.vue'
 import CyElement from '@/components/CyElement.vue'
 import exampleConfig from '@/example-config.ts'
 import eles from '@/example-elements.ts'
 
 const cy = ref<Core | undefined>(undefined)
+const elements = ref(eles)
 
 const config = computed(() => {
   const noElementsConfig = { ...exampleConfig }
@@ -48,7 +48,7 @@ const config = computed(() => {
 function addNode(event: EventObject) {
   console.log('node added')
   // Example of adding node
-  if (event.target === cy.value.instance) {
+  if (event.target === toRaw(cy.value)) {
     const id: string = uuid()
     elements.value.push({
       data: {
@@ -63,11 +63,12 @@ function addNode(event: EventObject) {
 
 function deleteNode(event: Event, id: string) {
   // Example of reactivelyeactively delete an element
-  const ele = elements.value.some((ele, index) => {
+  elements.value.some((ele: ElementDefinition, index: number) => {
     const match = ele.data.id == id
     if (match) {
-      // Using JS 'delete array(index)' won't trigger a reaction, so use this instead
-      elements.value = elements.value.filter((_, idx) => idx !== index)
+      elements.value = elements.value.filter(
+        (_: ElementDefinition, idx: number) => idx !== index
+      )
     }
     return match
   })
