@@ -5,7 +5,7 @@
       :config="exampleConfig"
       :preConfig="preConfig"
       :afterCreated="afterCreated"
-      @mousedown="addNode"
+      @tap="addNode"
       @cxttap="reactiveUpdate"
     >
       <cy-element

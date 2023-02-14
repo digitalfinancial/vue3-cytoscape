@@ -11,8 +11,6 @@ import {
   withDefaults,
   provide,
   onMounted,
-  useSlots,
-  useAttrs,
   defineEmits,
 } from 'vue'
 import cytoscape, { CytoscapeOptions, Core, EventObject } from 'cytoscape'
@@ -34,8 +32,6 @@ const emit = defineEmits<{
   (e: CytoEvent, event: EventObject): void
 }>()
 
-const attrs = useAttrs()
-const slots = useSlots()
 const container = ref<HTMLElement | null>(null)
 const instance = ref<Core | undefined>(undefined)
 const resolve = ref<(value?: PromiseLike<Core> | Core) => void>(() => {})

@@ -9,12 +9,17 @@ import {
   withDefaults,
   watch,
   onBeforeUnmount,
-  useAttrs,
   onMounted,
   inject,
   defineEmits,
 } from 'vue'
-import { Selector, Core, ElementDefinition, EventObject } from 'cytoscape'
+import {
+  Selector,
+  Core,
+  ElementDefinition,
+  EventObject,
+  CollectionReturnValue,
+} from 'cytoscape'
 import { CytoEvent } from '@/types'
 
 const props = withDefaults(
@@ -31,12 +36,11 @@ const emit = defineEmits<{
   (e: CytoEvent, event: EventObject): void
 }>()
 
-const attrs = useAttrs()
 const id = ref(props.definition.data.id)
 const selector = ref<Selector>(`#${id.value}`)
 const instance = ref<Core | undefined>(undefined)
 
-function add() {
+function add(): CollectionReturnValue {
   // register all the component events as cytoscape ones
   for (const eventType of Object.values(CytoEvent)) {
     instance.value?.on(eventType, selector.value, (event: EventObject) => {
@@ -81,6 +85,8 @@ onMounted(() => {
 
     const ele = add()
 
+    if (id.value) return
+
     id.value = ele.data().id
     selector.value = `#${id.value}`
   })
@@ -95,7 +101,8 @@ watch(
   (data: any) => {
     const ele = instance.value?.getElementById(id.value)
     ele?.data(data)
-  }
+  },
+  { deep: true }
 )
 
 watch(
@@ -103,6 +110,7 @@ watch(
   (position: any = null) => {
     const ele = instance.value?.getElementById(id.value)
     ele?.position(JSON.parse(JSON.stringify(position)))
-  }
+  },
+  { deep: true }
 )
 </script>
