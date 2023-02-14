@@ -16,7 +16,7 @@ import {
   defineEmits,
 } from 'vue'
 import cytoscape, { CytoscapeOptions, Core, EventObject } from 'cytoscape'
-import { CytoscapeEventsNames } from '@/types'
+import { CytoEvent } from '@/types'
 
 const props = withDefaults(
   defineProps<{
@@ -31,7 +31,7 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (e: CytoscapeEventsNames, event: EventObject): void
+  (e: CytoEvent, event: EventObject): void
 }>()
 
 const attrs = useAttrs()
@@ -62,13 +62,14 @@ onMounted(() => {
   const cyInstance = cytoscape({ container: container.value, ...props.config })
 
   // register all the component events as cytoscape ones
-  for (const eventType of Object.values(CytoscapeEventsNames)) {
+  for (const eventType of Object.values(CytoEvent)) {
     cyInstance?.on(eventType, (event: EventObject) => {
       emit(eventType, event)
     })
   }
 
   instance.value = cyInstance
+
   // resolve the promise with the object created
   resolve.value(cyInstance)
 

@@ -15,7 +15,7 @@ import {
   defineEmits,
 } from 'vue'
 import { Selector, Core, ElementDefinition, EventObject } from 'cytoscape'
-import { CyElementEventsNames } from '@/types'
+import { CytoEvent } from '@/types'
 
 const props = withDefaults(
   defineProps<{
@@ -28,7 +28,7 @@ const props = withDefaults(
 )
 
 const emit = defineEmits<{
-  (e: CyElementEventsNames, event: EventObject): void
+  (e: CytoEvent, event: EventObject): void
 }>()
 
 const attrs = useAttrs()
@@ -38,7 +38,7 @@ const instance = ref<Core | undefined>(undefined)
 
 function add() {
   // register all the component events as cytoscape ones
-  for (const eventType of Object.values(CyElementEventsNames)) {
+  for (const eventType of Object.values(CytoEvent)) {
     instance.value?.on(eventType, selector.value, (event: EventObject) => {
       emit(eventType, event)
     })
@@ -73,19 +73,17 @@ function add() {
   return instance.value?.add(def)[0]
 }
 
-function configure(cy: Core) {
-  instance.value = cy
-
-  const ele = add()
-
-  id.value = ele.data().id
-  selector.value = `#${id.value}`
-}
-
 const cy = inject('cy')
 
 onMounted(() => {
-  cy?.then(configure)
+  cy?.then((cy: Core) => {
+    instance.value = cy
+
+    const ele = add()
+
+    id.value = ele.data().id
+    selector.value = `#${id.value}`
+  })
 })
 
 onBeforeUnmount(() => {
