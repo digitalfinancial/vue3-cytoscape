@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "allowJs": true,        
     "declaration": true,
     "declarationDir": "./dist",
     "noImplicitAny": true,
@@ -25,6 +26,7 @@
   },
   "include": [
     "src/**/*.ts",
+    "src/**/*.d.ts",
     "src/**/*.tsx",
     "src/**/*.vue",
     "tests/**/*.ts",

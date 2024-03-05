@@ -20,3 +20,14 @@ yarn-error.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+*.war
+auto-save-list
+tramp
+.\#*
