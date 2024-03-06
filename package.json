@@ -26,7 +26,7 @@
   ],
   "main": "./dist/vue3-cytoscape.umd.cjs",
   "module": "./dist/vue3-cytoscape.js",
-  "types": "./dist/src/index.ts",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/vue3-cytoscape.js",
